@@ -825,8 +825,37 @@ For each server, click the server, then click **Desktop** > **IP Configuration**
 
 1. Click `Server-FTP` > **Services** > **FTP**.
 2. Switch the FTP service to **On**.
-3. Under User Setup, create user `student` with password `cisco123`, then click **Add**.
-4. Optionally add a text file using the FTP service file area for the demonstration.
+3. Under **User Setup**, configure the user accounts with the appropriate permissions:
+
+| Username | Password | Permissions to Check | Purpose / Security Rationale |
+|---|---|---|---|
+| `student` | `cisco123` | **Read**, **List** *(Optionally check **Write**)* | **Least Privilege Access:** Allows students to view files (`dir`) and download course resources (`get`). Leave **Delete** and **Rename** unchecked to prevent accidental or malicious file tampering. *(Check **Write** if students must upload assignment files via `put`)*. |
+| `admin` | `cisco123` | **Read**, **Write**, **Delete**, **Rename**, **List** | Full administrative rights for server maintenance, uploading, and managing repository files. |
+
+4. After typing the credentials and selecting the checkboxes for each account:
+   - For `student`: Check **Read** and **List** (and **Write** if upload testing is needed), then click **Add**.
+   - For `admin`: Check all 5 boxes (**Read**, **Write**, **Delete**, **Rename**, **List**), then click **Add**.
+5. *(Optional)* Under the FTP file list, note the default Cisco sample files, or create a text file on a PC to test file transfers. (example file name: asa842-k8.bin)
+6. **Verify FTP access from a Student PC (`Student-PC1` > Desktop > Command Prompt):** (if you're checking with PC make sure to first goto Desktop -> IP Configuration and select DHCP IP Configuration instead of Static).
+
+```text
+ftp ftp.university.local
+```
+*(or `ftp 10.10.40.3`)*
+
+- Enter username: `student`
+- Enter password: `cisco123`
+- Type `dir` to list files (tests **List** permission).
+- Type `get <filename>` to download a file (tests **Read** permission).
+
+Enter the following commands after logging in.
+
+```bash
+dir
+get asa842-k8.bin 
+```
+
+- Type `quit` to exit FTP session.
 
 ### Email server settings
 
@@ -846,7 +875,7 @@ All PCs use DHCP. For every PC:
 4. Click the **DHCP** button.
 5. Wait a few seconds. The IP address, subnet mask, default gateway, and DNS Server fields should populate.
 
-Do this for every HQ and branch PC. Verify a PC by clicking **Desktop** > **Command Prompt** and entering:
+Do this for all PCs. Verify by opening a PC and clicking **Desktop** > **Command Prompt** and entering:
 
 ```text
 ipconfig /all
@@ -982,6 +1011,8 @@ Switch to **Simulation** mode at the bottom right. Use **Edit Filters** and reta
 | Web works by IP but not name | DNS record is wrong | Confirm `university.local -> 10.10.40.2` |
 | Student cannot browse but should | ACL rule missing or applied in wrong direction | `show access-lists STUDENT_POLICY`, `show ip interface vlan 30` |
 | Protected port stops working | Expected port-security restriction or sticky-MAC change | `show port-security interface fa0/1`; reconnect original PC or clear sticky configuration (Step 6) |
+| FTP login succeeds but `dir` or `get` fails | Missing Read and List permissions for user `student` | Select `student` under `Server-FTP` > **Services** > **FTP**, check **Read** and **List**, then click **Save** |
+| FTP connection refused from Student PC | FTP service is Off, wrong IP/DNS, or ACL issue | Check `Server-FTP` FTP service is **On**, verify DNS entry for `ftp.university.local`, and check ACL permits ports 20 & 21 |
 
 ## 16. Final exam checklist
 
