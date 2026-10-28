@@ -178,7 +178,7 @@ Stale entries from old cables can stay listed for a few minutes (hold time count
 
 To check the PC and server ports after the switches are configured (Steps 5, 6 and 8), run `show interfaces status` on each switch. The PCs must be `connected` on `Fa0/1` to `Fa0/3` (`Fa0/1` to `Fa0/4` on SW-Students), and on `CORE-HQ` the ports `Fa0/5`, `Fa0/6` and `Fa0/7` must be `connected` in VLAN 40.
 
-## 4. Addressing plan
+## 4. Addressing plan (this is only for reference nothing to be done in this step: jump to step 5 for next task)
 
 Use this plan exactly; it is also your VLSM evidence. This step is a reference only. Nothing is configured here; the addresses are entered in Steps 5 to 10.
 
